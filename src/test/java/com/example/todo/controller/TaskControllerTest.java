@@ -9,49 +9,63 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.equalTo;
 
-@ExtendWith(MockitoExtension.class)
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
 class TaskControllerTest {
-    TaskController taskController;
+    @Autowired
+    private MockMvc mvc;
 
-
-    TaskService taskService;
-
-    @Mock
-    TaskRepository taskRepository;
+    @MockBean
+    TaskRepository mockRepo;
 
     @BeforeEach
     void init(){
-        taskService = new TaskService(taskRepository);
-        taskController = new TaskController(taskService);
+        Task t1 = new Task("1","test1",true);
+        Task t2 = new Task("2","test2",true);
+        Task t3 = new Task("3","test3",false);
+
+        when(mockRepo.findAll()).thenReturn(Arrays.asList(t1,t2,t3));
     }
 
 
     @Test
-    void getTasks() {
-        taskController.getTasks();
-        verify(taskRepository, times(1)).findAll();
+    void getTasks() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/tasks").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"id\":\"1\",\"description\":\"test1\",\"active\":true},{\"id\":\"2\",\"description\":\"test2\",\"active\":true},{\"id\":\"3\",\"description\":\"test3\",\"active\":false}]"));
     }
 
     @Test
     void saveNewTask() {
-        Task mockTask = new Task();
-        mockTask.setDescription("Baka bullar");
-        mockTask.setActive(true);
 
-        taskController.saveNewTask(mockTask);
-        verify(taskRepository, times(1)).save(mockTask);
     }
 
     @Test
     void updateStatus() {
+
+    }
+
+    @Test
+    void updateStatusFail() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.post("/tasks/update/4").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(equalTo("The task with id 4 dont exist")));
     }
 }
