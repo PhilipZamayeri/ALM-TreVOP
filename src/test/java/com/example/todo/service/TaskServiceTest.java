@@ -37,7 +37,7 @@ class TaskServiceTest {
     @Test
     void getTasks() {
         Task task = new Task();
-        task.setDescription("spagetti");
+        task.setDescription("Spaghetti");
 
         List<Task> expected = Arrays.asList(task);
         when(taskRepository.findAll()).thenReturn(expected);
@@ -50,12 +50,12 @@ class TaskServiceTest {
     @Test
     void saveTask() {
         Task task = new Task();
-        task.setDescription("köttbullar");
+        task.setDescription("Meatballs");
 
         when(taskRepository.save(task)).thenReturn(task);
 
         Task task2 = new Task();
-        task2.setDescription("köttbullar");
+        task2.setDescription("Meatballs");
 
         assertEquals(task, taskService.saveTask(task2));
         verify(taskRepository,times(1)).save(any());
