@@ -34,12 +34,12 @@ public class TaskController {
     }
 
     @GetMapping("/tasks/active")
-    public ResponseEntity<List<String>> getActiveTasks() {
+    public ResponseEntity<List<Task>> getActiveTasks() {
         return ResponseEntity.status(HttpStatus.OK).body(service.getActiveTasks(true));
     }
 
     @GetMapping("/tasks/notActive")
-    public ResponseEntity<List<String>> getNotActiveTasks() {
+    public ResponseEntity<List<Task>> getNotActiveTasks() {
         return ResponseEntity.status(HttpStatus.OK).body(service.getActiveTasks(false));
     }
 

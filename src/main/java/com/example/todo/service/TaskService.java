@@ -24,13 +24,8 @@ public class TaskService {
         return repository.save(task);
     }
 
-    public List<String> getActiveTasks(Boolean bool) {
-
-        List<Task> activeTasks = repository.findTaskByActive(bool);
-
-        return activeTasks.stream()
-                .map(Task::getDescription)
-                .collect(Collectors.toList());
+    public List<Task> getActiveTasks(Boolean bool) {
+        return repository.findTaskByActive(bool);
     }
 
     public String updateStatus(String id){

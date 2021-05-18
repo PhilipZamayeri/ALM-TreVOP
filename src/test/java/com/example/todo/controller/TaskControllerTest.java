@@ -42,6 +42,8 @@ class TaskControllerTest {
         Task t3 = new Task("3","test3",false);
 
         when(mockRepo.findAll()).thenReturn(Arrays.asList(t1,t2,t3));
+        when(mockRepo.findTaskByActive(true)).thenReturn(Arrays.asList(t1,t2));
+        when(mockRepo.findTaskByActive(false)).thenReturn(Arrays.asList(t3));
     }
 
 
@@ -50,6 +52,20 @@ class TaskControllerTest {
         mvc.perform(MockMvcRequestBuilders.get("/tasks").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{\"id\":\"1\",\"description\":\"test1\",\"active\":true},{\"id\":\"2\",\"description\":\"test2\",\"active\":true},{\"id\":\"3\",\"description\":\"test3\",\"active\":false}]"));
+    }
+
+    @Test
+    void getActiveTasks() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.get("/tasks/active").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"id\":\"1\",\"description\":\"test1\",\"active\":true},{\"id\":\"2\",\"description\":\"test2\",\"active\":true}]"));
+    }
+
+    @Test
+    void getNotActiveTasks() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.get("/tasks/notActive").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"id\":\"3\",\"description\":\"test3\",\"active\":false}]"));
     }
 
     @Test
