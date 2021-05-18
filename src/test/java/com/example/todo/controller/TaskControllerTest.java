@@ -64,8 +64,8 @@ class TaskControllerTest {
 
     @Test
     void updateStatusFail() throws Exception{
-        mvc.perform(MockMvcRequestBuilders.post("/tasks/update/4").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.post("/tasks/update/9").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(equalTo("The task with id 4 dont exist")));
+                .andExpect(content().string(equalTo("The task with id: 9 dont exist")));
     }
 }
