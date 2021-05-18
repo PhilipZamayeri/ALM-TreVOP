@@ -35,13 +35,13 @@ class TaskRepositoryTest {
     @Test
     void findTaskByNotActive() {
         Task mockTask = new Task();
-        mockTask.setDescription("grocery shopping");
+        mockTask.setDescription("go to the gym");
         mockTask.setActive(false);
         taskRepository.save(mockTask);
 
         List<Task> taskResult = taskRepository.findTaskByActive(false);
         String actual = taskResult.get(0).getDescription();
-        String expected = "grocery shopping";
+        String expected = "go to the gym";
         String notExpected = "take a shower";
 
         assertEquals(expected, actual);
