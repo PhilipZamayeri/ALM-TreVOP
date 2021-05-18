@@ -3,6 +3,7 @@ package com.example.todo.controller;
 import com.example.todo.models.Task;
 import com.example.todo.repository.TaskRepository;
 import com.example.todo.service.TaskService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,8 +70,27 @@ class TaskControllerTest {
     }
 
     @Test
-    void saveNewTask() {
+    void saveNewTask() throws Exception {
+        Task testTask = new Task("TestTask", true);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(testTask);
 
+        mvc.perform(MockMvcRequestBuilders.post("/tasks").contentType(MediaType.APPLICATION_JSON).content(json)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Task saved"));
+    }
+
+    @Test
+    void saveNewTaskInvalid() throws Exception {
+        Task testTask = new Task();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(testTask);
+
+        mvc.perform(MockMvcRequestBuilders.post("/tasks").contentType(MediaType.APPLICATION_JSON).content(json)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid task"));
     }
 
     @Test
