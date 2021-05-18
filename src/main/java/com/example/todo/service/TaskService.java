@@ -2,6 +2,7 @@ package com.example.todo.service;
 
 import com.example.todo.models.Task;
 import com.example.todo.repository.TaskRepository;
+import com.example.todo.service.exception.TaskDoesNotExist;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +33,12 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
-    public void updateStatus(String id){
+    public String updateStatus(String id){
         Optional<Task> task = repository.findById(id);
+        if (task.isEmpty())
+            throw new TaskDoesNotExist("The task with id: " + id + " dont exist");
         task.ifPresent(value -> value.setActive(!value.isActive()));
         repository.save(task.get());
+        return id + ": status was updated";
     };
 }
