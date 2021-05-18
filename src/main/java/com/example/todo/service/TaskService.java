@@ -19,8 +19,8 @@ public class TaskService {
         return repository.findAll();
     }
 
-    public void saveTask(Task task) {
-        repository.save(task);
+    public Task saveTask(Task task) {
+        return repository.save(task);
     }
 
     public List<String> getActiveTasks(Boolean bool) {
