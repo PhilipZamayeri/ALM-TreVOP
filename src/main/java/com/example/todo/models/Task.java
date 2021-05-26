@@ -14,4 +14,9 @@ public class Task {
     String id;
     String description;
     boolean active;
+
+    public Task(String description, boolean active) {
+        this.description = description;
+        this.active = active;
+    }
 }
