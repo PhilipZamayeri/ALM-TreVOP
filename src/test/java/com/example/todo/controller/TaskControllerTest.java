@@ -93,10 +93,6 @@ class TaskControllerTest {
                 .andExpect(content().string("Invalid task"));
     }
 
-    @Test
-    void updateStatus() {
-
-    }
 
     @Test
     void updateStatusFail() throws Exception{
