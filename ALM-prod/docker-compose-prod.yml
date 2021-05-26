@@ -15,7 +15,7 @@ services:
       - mongo
 
   java-app:
-    image: 3vop-image
+    image: philipzdocker/alm-project:latest
     ports:
       - 8080:8080
     environment:
