@@ -10,13 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Created by Philip Zamayeri
- * Date: 2021-05-17
- * Time: 13:35
- * Project: todo
- * Copyright: MIT
- */
 @RequiredArgsConstructor
 @RestController
 public class TaskController {
