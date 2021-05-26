@@ -3,6 +3,7 @@ package com.example.todo.controller;
 import com.example.todo.models.Task;
 import com.example.todo.repository.TaskRepository;
 import com.example.todo.service.TaskService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +43,8 @@ class TaskControllerTest {
         Task t3 = new Task("3","test3",false);
 
         when(mockRepo.findAll()).thenReturn(Arrays.asList(t1,t2,t3));
+        when(mockRepo.findTaskByActive(true)).thenReturn(Arrays.asList(t1,t2));
+        when(mockRepo.findTaskByActive(false)).thenReturn(Arrays.asList(t3));
     }
 
 
@@ -53,8 +56,41 @@ class TaskControllerTest {
     }
 
     @Test
-    void saveNewTask() {
+    void getActiveTasks() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.get("/tasks/active").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"id\":\"1\",\"description\":\"test1\",\"active\":true},{\"id\":\"2\",\"description\":\"test2\",\"active\":true}]"));
+    }
 
+    @Test
+    void getNotActiveTasks() throws Exception{
+        mvc.perform(MockMvcRequestBuilders.get("/tasks/notActive").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{\"id\":\"3\",\"description\":\"test3\",\"active\":false}]"));
+    }
+
+    @Test
+    void saveNewTask() throws Exception {
+        Task testTask = new Task("TestTask", true);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(testTask);
+
+        mvc.perform(MockMvcRequestBuilders.post("/tasks").contentType(MediaType.APPLICATION_JSON).content(json)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Task saved"));
+    }
+
+    @Test
+    void saveNewTaskInvalid() throws Exception {
+        Task testTask = new Task();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(testTask);
+
+        mvc.perform(MockMvcRequestBuilders.post("/tasks").contentType(MediaType.APPLICATION_JSON).content(json)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid task"));
     }
 
     @Test
