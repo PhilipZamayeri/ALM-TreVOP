@@ -7,8 +7,8 @@ package com.example.todo.service.exception;
  * Project: todo
  * Package: com.example.todo.service.exception
  */
-public class TaskDoesNotExist extends RuntimeException{
-    public TaskDoesNotExist(String errorMessage) {
+public class TaskException extends RuntimeException{
+    public TaskException(String errorMessage) {
         super(errorMessage);
     }
 }
