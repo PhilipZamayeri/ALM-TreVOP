@@ -18,7 +18,7 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
-      - name: mvn Test
+      - name: Build Jar file
         run: mvn clean install
 
       - name: Docker login
